@@ -2,6 +2,7 @@
 var container = document.getElementById('pics');
 // container.addEventListener('click', handleClick);
 var imgObject = [];
+var usedImgs = [];
 
 function images(name, url) {
   this.name = name;
@@ -43,13 +44,42 @@ function handleClick(event) {
 }
 
 function renderRandImg() {
+  var randomSet = [];
   var ulEl = document.createElement('ul');
   var liEl = document.createElement('li');
+  console.log(randomSet);
   for(var i = 0; i < 3; i++) {
     var randNum = randomNum() - 1;
     var imEl = document.createElement('img');
     imEl.src = imgObject[randNum].url;
     imEl.id = imgObject[randNum].name;
+    for (var j = 0; j < randomSet.length; j++) {
+      if(randomSet.length === 0) {
+        randomSet.push(imEl);
+        console.log(randomSet);
+      } else if (randomSet[j] === imEl) {
+        j--;
+        return;
+      } else {
+        randomSet.push(imEl);
+      }
+    };
+    // if (randomSet.length === 0) {
+    //   randomSet.push(imEl);
+    // } else {
+    //   for (var j = 0; j < randomSet.length; j++) {
+    //       console.log(randomSet[j]);
+    //       i--;
+    //     };
+    //     imEl.id !== randomSet[j]) {
+    //       console.log(imEl.id);
+    //       console.log(randomSet[j]);
+    //       randomSet.push(imEl.id);
+    //     } else {
+    //       j -= 1;
+    //     };
+    //   };
+    // };
     liEl.appendChild(imEl);
   }
   ulEl.appendChild(liEl);
