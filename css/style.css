@@ -6,13 +6,7 @@ body {
   background-size: cover;
 }
 
-h1 {
-  background-color: #0000FE;
-  color: white;
-  text-align: center;
-}
-
-h2 {
+header {
   background-color: #0000FE;
   color: white;
   text-align: center;
@@ -37,4 +31,15 @@ li img {
   height: 400px;
   width: 960px;
   margin: auto;
+}
+
+p {
+  color: #0000FE;
+  text-align: center;
+  font-size: 48px;
+}
+
+canvas {
+  column-rule-color: white;
+  color: white;
 }
