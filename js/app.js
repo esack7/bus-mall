@@ -1,12 +1,13 @@
 'use strict';
 var container = document.getElementById('pics');
-var button = document.createElement('button');
-// container.addEventListener('click', handleClick);
+
 var imgObject = [];
 var usedImgs = [];
 var randomSet = [];
 var previousSet = [];
 var totalClicks = 0;
+var imgClicks = [];
+var imgNames = [];
 
 function images(name, url) {
   this.name = name;
@@ -14,6 +15,31 @@ function images(name, url) {
   this.clicks = 0;
   this.views = 0;
   imgObject.push(this);
+}
+
+if (localStorage.data) {
+  imgObject = JSON.parse(localStorage.data);
+} else {
+  new images('banana', 'img/banana.jpg');
+  new images('bag', 'img/bag.jpg');
+  new images('bathroom', 'img/bathroom.jpg');
+  new images('boots', 'img/boots.jpg');
+  new images('breakfast', 'img/breakfast.jpg');
+  new images('bubblegum', 'img/bubblegum.jpg');
+  new images('chair', 'img/chair.jpg');
+  new images('cthulhu', 'img/cthulhu.jpg');
+  new images('dog duck', 'img/dog-duck.jpg');
+  new images('dragon', 'img/dragon.jpg');
+  new images('pen', 'img/pen.jpg');
+  new images('pet sweep', 'img/pet-sweep.jpg');
+  new images('scissors', 'img/scissors.jpg');
+  new images('shark', 'img/shark.jpg');
+  new images('sweep', 'img/sweep.png');
+  new images('tauntaun', 'img/tauntaun.jpg');
+  new images('unicorn', 'img/unicorn.jpg');
+  new images('usb', 'img/usb.gif');
+  new images('water can', 'img/water-can.jpg');
+  new images('wine glass', 'img/wine-glass.jpg');
 }
 
 function randomNum(min, max) {
@@ -62,6 +88,7 @@ function handleClick(event) {
     if(event.target.id === randomSet[i].name) {
       randomSet[i].clicks++;
       totalClicks++;
+      localStorage.setItem('data', JSON.stringify(imgObject));
     }
   }
   wipe();
@@ -76,83 +103,98 @@ function wipe() {
   }
 }
 
+function resultMessage() {
+  var pEl = document.createElement('p');
+  pEl.textContent = 'Thanks for participating in the survey.  Below you can see the results of the survey, which includes your selections also!';
+  container.appendChild(pEl);
+}
+
 function final() {
   if(totalClicks === 25) {
+    container.removeEventListener('click', handleClick);
     wipe();
-    renderResults();
-    container.removEventListener;
+    resultMessage();
+    drawChart();
   }
 }
 
-function renderButton() {
-  container.removEventListener;
-  var messEl = document.createElement('h1');
-  messEl.textContent = 'Do you want to see the results?';
-  container.appendChild(messEl);
-  // var btEl = document.createElement('button');
-  button.textContent = 'See Results';
-  button.id = 'submit';
-  container.appendChild(button);
-}
-
-function handleButton(event) {
-  wipe();
-  renderResults();
-}
-
-function renderResults() {
-  var clickRender = document.getElementById('pics');
-  var hrEl = document.createElement('tr');
-  var hdEl = document.createElement('th');
-  hdEl.textContent = 'Item';
-  hrEl.appendChild(hdEl);
-  var hdEl = document.createElement('th');
-  hdEl.textContent = 'Clicks';
-  hrEl.appendChild(hdEl);
-  var hdEl = document.createElement('th');
-  hdEl.textContent = 'Views';
-  hrEl.appendChild(hdEl);
-  clickRender.appendChild(hrEl);
-  for(var i = 0; i < imgObject.length; i++) {
-  // for(var j = 0; j < imgObject[i].length; j++) {
-    var trEl = document.createElement('tr');
-    var tdEl = document.createElement('td');
-    tdEl.textContent = imgObject[i].name;
-    trEl.appendChild(tdEl);
-    var tdEl = document.createElement('td');
-    tdEl.textContent = imgObject[i].clicks;
-    trEl.appendChild(tdEl);
-    var tdEl = document.createElement('td');
-    tdEl.textContent = imgObject[i].views;
-    trEl.appendChild(tdEl);
-    // }
-    clickRender.appendChild(trEl);
-  }
-}
-
-var banana = new images('banana', 'img/banana.jpg');
-var bag = new images('bag', 'img/bag.jpg');
-var bathroom = new images('bathroom', 'img/bathroom.jpg');
-var boots = new images('boots', 'img/boots.jpg');
-var breakfast = new images('breakfast', 'img/breakfast.jpg');
-var bubblegum = new images('bubblegum', 'img/bubblegum.jpg');
-var chair = new images('chair', 'img/chair.jpg');
-var cthulhu = new images('cthulhu', 'img/cthulhu.jpg');
-var dogDuck = new images('dog duck', 'img/dog-duck.jpg');
-var dragon = new images('dragon', 'img/dragon.jpg');
-var pen = new images('pen', 'img/pen.jpg');
-var petSweep = new images('pet sweep', 'img/pet-sweep.jpg');
-var scissors = new images('scissors', 'img/scissors.jpg');
-var shark = new images('shark', 'img/shark.jpg');
-var sweep = new images('sweep', 'img/sweep.png');
-var tauntaun = new images('tauntaun', 'img/tauntaun.jpg');
-var unicorn = new images('unicorn', 'img/unicorn.jpg');
-var usb = new images('usb', 'img/usb.gif');
-var waterCan = new images('water can', 'img/water-can.jpg');
-var wineGlass = new images('wine glass', 'img/wine-glass.jpg');
-//
-// buildSet();
 renderRandImg();
 
+function drawChart() {
+  var chartLabel = [];
+  var chartData = [];
+  for(var i = 0; i < imgObject.length; i++) {
+    chartData.push(imgObject[i].clicks);
+    chartLabel.push(imgObject[i].name);
+  }
+  Chart.defaults.global.defaultFontColor = 'white';
+  Chart.defaults.global.defaultFontSize = 22;
+  var ctx = document.getElementById('myChart').getContext('2d');
+  var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: chartLabel,
+      datasets: [{
+        label: '# of Clicks',
+        data: chartData,
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.75)',
+          'rgba(54, 162, 235, 0.75)',
+          'rgba(255, 206, 86, 0.75)',
+          'rgba(75, 192, 192, 0.75)',
+          'rgba(153, 102, 255, 0.75)',
+          'rgba(255, 159, 64, 0.75)',
+          'rgba(255, 99, 132, 0.75)',
+          'rgba(54, 162, 235, 0.75)',
+          'rgba(255, 206, 86, 0.75)',
+          'rgba(75, 192, 192, 0.75)',
+          'rgba(153, 102, 255, 0.75)',
+          'rgba(255, 159, 64, 0.75)',
+          'rgba(255, 99, 132, 0.75)',
+          'rgba(54, 162, 235, 0.75)',
+          'rgba(255, 206, 86, 0.75)',
+          'rgba(75, 192, 192, 0.75)',
+          'rgba(153, 102, 255, 0.75)',
+          'rgba(255, 159, 64, 0.75)',
+          'rgba(255, 99, 132, 0.75)',
+          'rgba(54, 162, 235, 0.75)'
+
+        ],
+        borderColor: [
+          'rgba(255,99,132,1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)',
+          'rgba(255,99,132,1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)',
+          'rgba(255,99,132,1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)',
+          'rgba(255, 159, 64, 1)',
+          'rgba(255,99,132,1)',
+          'rgba(54, 162, 235, 1)'
+        ],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero:true
+          }
+        }]
+      }
+    }
+  });
+}
+
 container.addEventListener('click', handleClick);
-button.addEventListener('click', handleButton);
