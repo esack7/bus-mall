@@ -128,7 +128,7 @@ function drawChart() {
     chartLabel.push(imgObject[i].name);
   }
   Chart.defaults.global.defaultFontColor = 'white';
-  Chart.defaults.global.defaultFontSize = 22;
+  Chart.defaults.global.defaultFontSize = 14;
   var ctx = document.getElementById('myChart').getContext('2d');
   var myChart = new Chart(ctx, {
     type: 'bar',
